@@ -1,0 +1,105 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    background-color: #0D1E37;
+  }
+  
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+.content {
+    flex: 1; /* Makes the content expand to fill the available space, pushing the footer down */
+    background-color: #0D1E37;
+}
+
+.search-box {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-align: center;
+}
+
+.search-box input[type="text"] {
+    padding: 10px;
+    width: 25%;
+    margin: 8px auto;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    text-align: center;
+}
+
+#movie-container {
+    padding: 0;
+}
+
+.movie-card {
+    display: flex;
+    background: #ffffff;
+    margin: 8px auto;
+    padding: 10px;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 50%;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.movie-card:hover {
+    background: #7f8c8d; /* light grey hover */
+}
+
+.movie-image-placeholder {
+    width: 80px;
+    height: 120px;
+    background: #bdc3c7;
+    margin-right: 15px;
+}
+
+.movie-info {
+    flex-grow: 1;
+}
+
+.movie-title {
+    font-size: 18px;
+    color: #000000;
+}
+
+.movie-rating {
+    color: #f1c40f;
+    font-size: 16px;
+}
+
+.movie-details {
+    display: none;
+    color: #000000;
+}
+
+.notice {
+    color: #ffffff;
+    text-align: center;
+    font-size: medium;
+    padding: 10px;
+}
+
+.site-header {
+    text-align: center;
+    background: #0D1E37; /* Match the body background color or any color of choice */
+    padding: 10px 0;
+}
+
+#site-logo {
+    max-width: 30%; /* Adjust as necessary */
+    height: auto;
+}
+
+.recommendedMovies{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    padding: 10px;
+    font-size: x-large;
+}
