@@ -1,8 +1,8 @@
-# Import necessary libraries
 import pandas as pd
 from sklearn.neighbors import NearestNeighbors
 from sklearn.preprocessing import MultiLabelBinarizer
 from fuzzywuzzy import process
+import random
 
 # Loading datasets
 movies = pd.read_csv('./movies.csv')
@@ -29,7 +29,7 @@ def find_closest_title(title):
     closest_title = process.extractOne(title, all_titles)[0]
     return closest_title
 
-# Function to recommend movies
+# Function to recommend movies based on favorite
 def recommend_movies(input_title):
     movie_title = find_closest_title(input_title)
     movie_idx = movies.index[movies['Title'] == movie_title].tolist()
@@ -44,7 +44,19 @@ def recommend_movies(input_title):
     recommended_movies = movies.iloc[recommended_movie_indices]['Title'].tolist()
     return recommended_movies
 
+# Function to recommend random fan favorites (5-star ratings)
+def recommend_fan_favorites():
+    high_rated = ratings[ratings['Rating'] == 5.0]
+    top_movies = high_rated['MovieId'].unique()
+    random_top_movies = random.sample(list(top_movies), 5)
+    fan_favorites = movies[movies['MovieId'].isin(random_top_movies)]['Title'].tolist()
+    return fan_favorites
+
 # Example usage
 user_favorite_movie = 'Toy Story'  # User input
 recommended_movies = recommend_movies(user_favorite_movie)
 print("Movies recommended based on", user_favorite_movie, ":\n", recommended_movies)
+
+# Recommend random fan favorites
+fan_favorites = recommend_fan_favorites()
+print("Random fan favorite movies:\n", fan_favorites)
