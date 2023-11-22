@@ -1,12 +1,34 @@
-import pandas as pd
+from flask import Flask, jsonify, request, render_template
+import os
 from sklearn.neighbors import NearestNeighbors
 from sklearn.preprocessing import MultiLabelBinarizer
 from fuzzywuzzy import process
+import pandas as pd
 import random
+
+app = Flask(__name__)
 
 # Loading datasets
 movies = pd.read_csv('./movies.csv')
 ratings = pd.read_csv('./ratings.csv')
+
+@app.route('/')
+def index():
+    return render_template('movieRecommender.html')
+
+@app.route('/recommend', methods=['GET'])
+def recommend():
+    movie_title = request.args.get('title', '')
+    recommended_movies = recommend_movies(movie_title)
+    return jsonify(recommended_movies)
+
+@app.route('/fan-favorites', methods=['GET'])
+def fan_favorites():
+    favorites = recommend_fan_favorites()
+    return jsonify(favorites)
+
+if __name__ == '__main__':
+    app.run(debug=True)
 
 # Preprocess movies data
 movies['Genre'] = movies['Genre'].apply(lambda x: x.split('|'))
