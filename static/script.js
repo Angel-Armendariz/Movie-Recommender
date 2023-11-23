@@ -69,10 +69,15 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(response => response.json())
         .then(movies => {
             movies.forEach(movie => {
-                var movieCard = createMovieCard({ title: movie, rating: '★★★★★', details: 'Genre: ...' });
+                var movieCard = createMovieCard({ 
+                    title: movie.title, 
+                    rating: '★★★★★', 
+                    details: 'Genre: ' + movie.genre // Correctly accessing the genre property
+                });
                 movieContainer.appendChild(movieCard);
             });
         });
+
 
     document.getElementById('search-button').addEventListener('click', function() {
         var movieTitle = document.getElementById('search-input').value;

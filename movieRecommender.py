@@ -71,8 +71,15 @@ def recommend_fan_favorites():
     high_rated = ratings[ratings['Rating'] == 5.0]
     top_movies = high_rated['MovieId'].unique()
     random_top_movies = random.sample(list(top_movies), 5)
-    fan_favorites = movies[movies['MovieId'].isin(random_top_movies)]['Title'].tolist()
+    fan_favorites = []
+    for movie_id in random_top_movies:
+        movie_info = movies[movies['MovieId'] == movie_id].iloc[0]
+        fan_favorites.append({
+            "title": movie_info['Title'],
+            "genre": movie_info['Genre']
+        })
     return fan_favorites
+
 
 # Example usage
 user_favorite_movie = 'Toy Story'  # User input
