@@ -59,12 +59,24 @@ def recommend_movies(input_title):
     if not movie_idx:
         return "Movie not found."
     movie_idx = movie_idx[0]
-    
+    chosen_movie = {
+        "title": movies.iloc[movie_idx]['Title'],
+        "genre": ", ".join(movies.iloc[movie_idx]['Genre'])
+    }
+
     distances, indices = model.kneighbors([genres_df.iloc[movie_idx]])
     recommended_movie_indices = indices[0][1:]  # Exclude the input movie itself
-    
-    recommended_movies = movies.iloc[recommended_movie_indices]['Title'].tolist()
-    return recommended_movies
+
+    recommended_movies = []
+    for idx in recommended_movie_indices:
+        movie_info = movies.iloc[idx]
+        recommended_movies.append({
+            "title": movie_info['Title'],
+            "genre": ", ".join(movie_info['Genre'])
+        })
+
+    return {"chosenMovie": chosen_movie, "recommendations": recommended_movies}
+
 
 # Function to recommend random fan favorites (5-star ratings)
 def recommend_fan_favorites():

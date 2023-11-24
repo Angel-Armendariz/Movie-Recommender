@@ -38,18 +38,28 @@ document.addEventListener('DOMContentLoaded', function() {
       return card;
   }
 
-  function showModal(movies) {
-      var modal = document.createElement('div');
-      modal.className = 'modal';
+  function showModal(chosenMovie, recommendedMovies) {
+    var modal = document.createElement('div');
+    modal.className = 'modal';
 
-      var modalContent = document.createElement('div');
-      modalContent.className = 'modal-content';
+    var modalContent = document.createElement('div');
+    modalContent.className = 'modal-content';
 
-      movies.forEach(movie => {
-          var p = document.createElement('p');
-          p.textContent = movie;
-          modalContent.appendChild(p);
-      });
+    // Display the chosen movie
+    var chosenMovieElem = document.createElement('p');
+    chosenMovieElem.textContent = chosenMovie.title + " - Genre: " + chosenMovie.genre;
+    modalContent.appendChild(chosenMovieElem);
+
+    // Separator
+    var separator = document.createElement('hr');
+    modalContent.appendChild(separator);
+
+    // Display recommended movies
+    recommendedMovies.forEach(movie => {
+        var p = document.createElement('p');
+        p.textContent = movie.title + " - Genre: " + movie.genre;
+        modalContent.appendChild(p);
+    });
 
       var closeBtn = document.createElement('span');
       closeBtn.className = 'close';
@@ -85,7 +95,7 @@ document.addEventListener('DOMContentLoaded', function() {
             fetch('/recommend?title=' + encodeURIComponent(movieTitle))
                 .then(response => response.json())
                 .then(data => {
-                    showModal(data);
+                    showModal(data.chosenMovie, data.recommendations);
                 });
         }
     });
@@ -97,7 +107,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 fetch('/recommend?title=' + encodeURIComponent(movieTitle))
                     .then(response => response.json())
                     .then(data => {
-                        showModal(data);
+                        showModal(data.chosenMovie, data.recommendations);
                     });
             }
         }
