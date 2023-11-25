@@ -1,42 +1,74 @@
 document.addEventListener('DOMContentLoaded', function() {
   var movieContainer = document.getElementById('movie-container');
 
-  function createMovieCard(movie) {
-      var card = document.createElement('div');
-      card.className = 'movie-card';
+  function fetchMoviePosterUrl(movieTitle, callback) {
+    const apiKey = 'c5f6d4cd65047ebc960cf91daa622c4c';
 
-      var imagePlaceholder = document.createElement('div');
-      imagePlaceholder.className = 'movie-image-placeholder';
+    // Extract title by removing the year and any trailing whitespace
+    const titleOnly = movieTitle.replace(/\(\d{4}\)\s*$/, '').trim();
 
-      var info = document.createElement('div');
-      info.className = 'movie-info';
+    const queryUrl = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${encodeURIComponent(titleOnly)}`;
 
-      var title = document.createElement('div');
-      title.className = 'movie-title';
-      title.innerHTML = movie.title;
+    fetch(queryUrl)
+        .then(response => response.json())
+        .then(data => {
+            if (data.results && data.results.length > 0 && data.results[0].poster_path) {
+                const posterPath = data.results[0].poster_path;
+                const posterUrl = `https://image.tmdb.org/t/p/w500${posterPath}`;
+                callback(posterUrl);
+            } else {
+                callback('/static/placeholder.jpg'); // Default placeholder if no poster is found
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching poster from TMDb:', error);
+            callback('/static/placeholder.jpg'); // Default placeholder in case of error
+        });
+    }
 
-      var rating = document.createElement('div');
-      rating.className = 'movie-rating';
-      rating.innerHTML = movie.rating;
 
-      var details = document.createElement('div');
-      details.className = 'movie-details';
-      details.innerHTML = movie.details;
-
-      info.appendChild(title);
-      info.appendChild(rating);
-      info.appendChild(details);
-
-      card.appendChild(imagePlaceholder);
-      card.appendChild(info);
-
-      card.addEventListener('click', function() {
-          var detailsVisible = details.style.display === 'block';
-          details.style.display = detailsVisible ? 'none' : 'block';
-      });
-
-      return card;
-  }
+    function createMovieCard(movie) {
+        var card = document.createElement('div');
+        card.className = 'movie-card';
+    
+        var image = document.createElement('img'); // Create an img element instead of div
+        image.className = 'movie-image'; // Set a class for styling (optional)
+    
+        fetchMoviePosterUrl(movie.title, function(posterUrl) {
+            console.log('Poster URL:', posterUrl);
+            image.src = posterUrl !== 'default_poster_url' ? posterUrl: '/static/placeholder.jpg';    
+            // Set a placeholder image from the static folder
+        });
+    
+        var info = document.createElement('div');
+        info.className = 'movie-info';
+    
+        var title = document.createElement('div');
+        title.className = 'movie-title';
+        title.innerHTML = movie.title;
+    
+        var rating = document.createElement('div');
+        rating.className = 'movie-rating';
+        rating.innerHTML = movie.rating;
+    
+        var details = document.createElement('div');
+        details.className = 'movie-details';
+        details.innerHTML = movie.details;
+    
+        info.appendChild(title);
+        info.appendChild(rating);
+        info.appendChild(details);
+    
+        card.appendChild(image); // Append image here
+        card.appendChild(info);
+    
+        card.addEventListener('click', function() {
+            var detailsVisible = details.style.display === 'block';
+            details.style.display = detailsVisible ? 'none' : 'block';
+        });
+    
+        return card;
+    }
 
   function showModal(chosenMovie, recommendedMovies) {
     var modal = document.createElement('div');
