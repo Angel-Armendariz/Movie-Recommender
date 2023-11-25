@@ -18,15 +18,35 @@ body {
     padding-top: 10px;
     padding-bottom: 10px;
     text-align: center;
+    color:#000000;
 }
 
 .search-box input[type="text"] {
     padding: 10px;
-    width: 25%;
+    width: 20%;
     margin: 8px auto;
+    border-radius: 1rem;
     border: 1px solid #ddd;
-    border-radius: 4px;
     text-align: center;
+}
+
+#search-button {
+    background-color: #D0DAE9; /* Deep navy blue background */
+    padding: 10px 20px; /* Vertical and horizontal padding */
+    border: none; /* No border */
+    border-radius: 1rem; /* Rounded corners */
+    cursor: pointer; /* Cursor changes to pointer to indicate it's clickable */
+    transition: background-color 0.3s, transform 0.1s; /* Smooth transition for hover and active states */
+    font-size: 1rem; /* Font size that matches your design */
+    margin-left: 8px; /* Space between the search input and button */
+}
+
+#search-button:hover {
+    background-color: #11254c; /* Slightly darker shade on hover for interaction feedback */
+}
+
+#search-button:active {
+    transform: scale(0.95); /* Slightly scale down the button when clicked */
 }
 
 #movie-container {
@@ -117,23 +137,33 @@ body {
 }
 
 .modal-content {
-    background-color: #fefefe;
+    background-color: #D0DAE9;
     margin: 15% auto;
     padding: 20px;
     border: 1px solid #888;
     width: 80%;
+    border-radius: 1rem;
 }
 
 .close {
-    color: #aaa;
+    color: #0D1E37; /* Dark navy blue, matching the main color of the page */
     float: right;
     font-size: 28px;
     font-weight: bold;
+    cursor: pointer; /* Changes the cursor to indicate it's clickable */
+    transition: color 0.3s, transform 0.2s; /* Smooth transition for hover effects */
+    margin-top: -10px; /* Adjust the top margin to align the button */
+    margin-right: -10px; /* Adjust the right margin to align the button */
 }
 
 .close:hover,
 .close:focus {
-    color: black;
+    color: #0D1E37; /* Light blue, matching the modal content's background */
+    transform: rotate(90deg); /* Rotates the 'X' on hover for a dynamic effect */
     text-decoration: none;
-    cursor: pointer;
+}
+
+
+.modal-content p:first-child {
+    text-align: center; /* Center the text inside the paragraph */
 }

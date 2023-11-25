@@ -45,6 +45,15 @@ document.addEventListener('DOMContentLoaded', function() {
     var modalContent = document.createElement('div');
     modalContent.className = 'modal-content';
 
+    // Close button
+    var closeBtn = document.createElement('span');
+    closeBtn.className = 'close';
+    closeBtn.innerHTML = '&times;';
+    closeBtn.onclick = function() {
+        modal.style.display = 'none';
+    };
+    modalContent.appendChild(closeBtn);
+
     // Display the chosen movie
     var chosenMovieElem = document.createElement('p');
     chosenMovieElem.textContent = chosenMovie.title + " - Genre: " + chosenMovie.genre;
@@ -61,15 +70,7 @@ document.addEventListener('DOMContentLoaded', function() {
         modalContent.appendChild(p);
     });
 
-      var closeBtn = document.createElement('span');
-      closeBtn.className = 'close';
-      closeBtn.innerHTML = '&times;';
-      closeBtn.onclick = function() {
-          modal.style.display = 'none';
-      };
-
       modal.appendChild(modalContent);
-      modalContent.appendChild(closeBtn);
       document.body.appendChild(modal);
       modal.style.display = 'block';
   }
