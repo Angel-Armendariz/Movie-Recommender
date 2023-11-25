@@ -92,7 +92,7 @@ body {
 }
 
 .movie-details {
-    display: none;
+    display: block;
     color: #000000;
 }
 
@@ -166,4 +166,45 @@ body {
 
 .modal-content p:first-child {
     text-align: center; /* Center the text inside the paragraph */
+}
+
+.simple-movie-card {
+    display: flex;
+    background: #ffffff;
+    margin: 8px auto;
+    padding: 10px;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 80%; /* Slightly narrower than the main movie cards */
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.simple-movie-card:hover {
+    background: #e0e0e0; /* Light grey hover for simple cards */
+}
+
+.simple-movie-card .movie-image {
+    width: 60px; /* Smaller image size for simple cards */
+    height: 90px;
+    background: #bdc3c7;
+    margin-right: 10px;
+}
+
+.simple-movie-card .movie-info {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column; /* Stack title and genre vertically */
+}
+
+.simple-movie-card .movie-title {
+    font-size: 16px; /* Slightly smaller font size for simple cards */
+    color: #000000;
+}
+
+.simple-movie-card .movie-details {
+    font-size: 14px; /* Smaller font size for genre */
+    color: #000000;
+    display: block; /* Always show genre */
 }

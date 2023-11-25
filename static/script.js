@@ -70,43 +70,80 @@ document.addEventListener('DOMContentLoaded', function() {
         return card;
     }
 
-  function showModal(chosenMovie, recommendedMovies) {
-    var modal = document.createElement('div');
-    modal.className = 'modal';
+    function createSimpleMovieCard(movie) {
+        var card = document.createElement('div');
+        card.className = 'simple-movie-card'; // Different class for different styling
+    
+        var image = document.createElement('img');
+        image.className = 'movie-image';
+    
+        fetchMoviePosterUrl(movie.title, function(posterUrl) {
+            image.src = posterUrl !== 'default_poster_url' ? posterUrl : '/static/placeholder.jpg';
+        });
+    
+        var info = document.createElement('div');
+        info.className = 'movie-info';
+    
+        var title = document.createElement('div');
+        title.className = 'movie-title';
+        title.innerHTML = movie.title;
+    
+        var details = document.createElement('div');
+        details.className = 'movie-details';
+        details.innerHTML = 'Genre: ' + movie.genre; // Display genre
+    
+        info.appendChild(title);
+        info.appendChild(details); // Only append title and details (genre)
+    
+        card.appendChild(image);
+        card.appendChild(info);
+    
+        return card;
+    }
+    
 
-    var modalContent = document.createElement('div');
-    modalContent.className = 'modal-content';
+    function showModal(chosenMovie, recommendedMovies) {
+        var modal = document.createElement('div');
+        modal.className = 'modal';
+    
+        var modalContent = document.createElement('div');
+        modalContent.className = 'modal-content';
+    
+        // Close button
+        var closeBtn = document.createElement('span');
+        closeBtn.className = 'close';
+        closeBtn.innerHTML = '&times;';
+        closeBtn.onclick = function() {
+            modal.style.display = 'none';
+        };
+        modalContent.appendChild(closeBtn);
+    
+        // Display the chosen movie
+        var chosenMovieElem = createSimpleMovieCard(chosenMovie); // Use createMovieCard for chosen movie
+        modalContent.appendChild(chosenMovieElem);
+    
+        // Separator
+        var separator = document.createElement('hr');
+        modalContent.appendChild(separator);
+    
+        // Display recommended movies
+        var recommendationsContainer = document.createElement('div');
+        recommendationsContainer.className = 'recommendations-container';
 
-    // Close button
-    var closeBtn = document.createElement('span');
-    closeBtn.className = 'close';
-    closeBtn.innerHTML = '&times;';
-    closeBtn.onclick = function() {
-        modal.style.display = 'none';
-    };
-    modalContent.appendChild(closeBtn);
+        recommendedMovies.forEach(movie => {
+            var movieCard = createSimpleMovieCard({ 
+                title: movie.title, 
+                genre: movie.genre // Assuming genre is a property of the movie object
+            });
+            recommendationsContainer.appendChild(movieCard);
+        });
 
-    // Display the chosen movie
-    var chosenMovieElem = document.createElement('p');
-    chosenMovieElem.textContent = chosenMovie.title + " - Genre: " + chosenMovie.genre;
-    modalContent.appendChild(chosenMovieElem);
-
-    // Separator
-    var separator = document.createElement('hr');
-    modalContent.appendChild(separator);
-
-    // Display recommended movies
-    recommendedMovies.forEach(movie => {
-        var p = document.createElement('p');
-        p.textContent = movie.title + " - Genre: " + movie.genre;
-        modalContent.appendChild(p);
-    });
-
-      modal.appendChild(modalContent);
-      document.body.appendChild(modal);
-      modal.style.display = 'block';
-  }
-
+        modalContent.appendChild(recommendationsContainer);
+        modal.appendChild(modalContent);
+        document.body.appendChild(modal);
+        modal.style.display = 'block';
+    }
+    
     // Fetch fan favorite movies from Flask and create movie cards
     fetch('/fan-favorites')
         .then(response => response.json())
