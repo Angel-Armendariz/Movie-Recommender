@@ -12,6 +12,111 @@ app = Flask(__name__)
 movies = pd.read_csv('./movies.csv')
 ratings = pd.read_csv('./ratings.csv')
 
+#Belal's------------1--start-----------------------------------------------------------------------------
+# # Group by MovieId and calculate the mean rating and vote count for each movie
+ratings_grouped = ratings.groupby('MovieId').agg(vote_average=('Rating', 'mean'),
+                                                  vote_count=('Rating', 'size')).reset_index()
+
+# Merge the movies and the aggregated ratings data on MovieId
+movies_with_ratings = movies.merge(ratings_grouped, on='MovieId', how='left')
+
+
+
+# Calculate C, the mean rating across all movies
+C = movies_with_ratings['vote_average'].mean()
+
+# Calculate m, the minimum number of votes required to be listed, for example, at the 90th percentile
+m = movies_with_ratings['vote_count'].quantile(0.90)
+
+# Function to compute the weighted rating for each movie
+def weighted_rating(x, m=m, C=C):
+    v = x['vote_count']
+    R = x['vote_average']
+    return (v/(v+m) * R) + (m/(m+v) * C)
+
+# Calculate the score and create a new feature 'score'
+movies_with_ratings['score'] = movies_with_ratings.apply(weighted_rating, axis=1)
+
+
+# Sort movies based on score calculated above
+movies_with_ratings = movies_with_ratings.sort_values('score', ascending=False)
+
+# You can now use this DataFrame to make recommendations  ^^
+
+@app.route('/top-rated', methods=['GET'])
+def top_rated():
+    top_movies = movies_with_ratings.head(10).to_dict(orient='records')
+    return jsonify(top_movies)
+
+
+# Assume this function is defined within the Flask app context where movies_with_ratings is available
+def get_weighted_top_movies(n=10):
+    return movies_with_ratings.head(n).to_dict(orient='records')
+
+@app.route('/weighted-top', methods=['GET'])
+def weighted_top():
+    top_movies_weighted = get_weighted_top_movies()
+    return jsonify(top_movies_weighted)
+
+# You would call this route to get the top movies based on the weighted rating system
+
+# Merge movies with the aggregated ratings
+movies_with_ratings = movies.merge(ratings_grouped, on='MovieId', how='left')
+
+# Assuming the weighted rating calculation is already defined, calculate the scores
+movies_with_ratings['score'] = movies_with_ratings.apply(weighted_rating, axis=1)
+
+def recommend_based_on_movie(input_movie_id, n_recommendations=5):
+    # Find the input movie's information
+    input_movie = movies_with_ratings[movies_with_ratings['MovieId'] == input_movie_id].iloc[0]
+    
+    # Calculate the similarity score between the input movie and all other movies
+    # Here we simply use the Jaccard similarity on genres. You could also use more complex similarity measures.
+    movies_with_ratings['similarity'] = movies_with_ratings['Genre'].apply(
+        lambda x: len(set(x) & set(input_movie['Genre'])) / len(set(x) | set(input_movie['Genre']))
+    )
+    
+    # Sort based on similarity score and weighted rating score
+    recommended_movies = movies_with_ratings.sort_values(
+        ['similarity', 'score'], ascending=[False, False]
+    ).head(n_recommendations + 1)  # Plus one because the list includes the input movie itself
+    
+    # Exclude the input movie from the recommendations
+    recommended_movies = recommended_movies[recommended_movies['MovieId'] != input_movie_id]
+    
+    return recommended_movies[['Title', 'Genre', 'score']]
+
+
+def recommend_based_on_movie(input_movie_id, n_recommendations=5):
+    # Find the input movie's information
+    input_movie = movies_with_ratings[movies_with_ratings['MovieId'] == input_movie_id].iloc[0]
+    
+    # Calculate the similarity score between the input movie and all other movies
+    # Here we simply use the Jaccard similarity on genres. You could also use more complex similarity measures.
+    movies_with_ratings['similarity'] = movies_with_ratings['Genre'].apply(
+        lambda x: len(set(x) & set(input_movie['Genre'])) / len(set(x) | set(input_movie['Genre']))
+    )
+    
+    # Sort based on similarity score and weighted rating score
+    recommended_movies = movies_with_ratings.sort_values(
+        ['similarity', 'score'], ascending=[False, False]
+    ).head(n_recommendations + 1)  # Plus one because the list includes the input movie itself
+    
+    # Exclude the input movie from the recommendations
+    recommended_movies = recommended_movies[recommended_movies['MovieId'] != input_movie_id]
+    
+    return recommended_movies[['Title', 'Genre', 'score']]
+
+
+@app.route('/recommend/<int:movie_id>')
+def movie_recommendations(movie_id):
+    recommended = recommend_based_on_movie(movie_id, n_recommendations=5)
+    return jsonify(recommended.to_dict(orient='records'))
+
+
+
+#Belal's-------1----end----------------------------------------------------------------------------------
+
 @app.route('/')
 def index():
     return render_template('movieRecommender.html')
