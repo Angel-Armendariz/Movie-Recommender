@@ -1,10 +1,11 @@
 There may be issues when trying to use flask within VScode so
 you should operate within a virtual environment
+
+SET UP
 1. Open a terminal 
 2. python -m venv env
 3. .\env\Scripts\activate
 4. Once activated, you can install Flask and other required packages within this environment.
-5. You'll have to go back into the virtual environment again after leaving VScode
 pip install pandas
 pip install scikit-learn
 pip install fuzzywuzzy
@@ -12,7 +13,8 @@ pip install python-Levenshtein
 pip install Flask
 set FLASK_APP=movieRecommender.py
 set FLASK_ENV=development
+
+HOW TO RUN CODE (if you're not already in virtual environment)
 $env:FLASK_APP = "movieRecommender.py"
 When you want to start up the server for testing 
 flask run
-
