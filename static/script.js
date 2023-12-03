@@ -31,21 +31,21 @@ document.addEventListener('DOMContentLoaded', function() {
         var card = document.createElement('div');
         card.className = 'movie-card';
     
-        var image = document.createElement('img'); // Create an img element instead of div
-        image.className = 'movie-image'; // Set a class for styling (optional)
+        var image = document.createElement('img');
+        image.className = 'movie-image';
     
         fetchMoviePosterUrl(movie.title, function(posterUrl) {
-            console.log('Poster URL:', posterUrl);
-            image.src = posterUrl !== 'default_poster_url' ? posterUrl: '/static/placeholder.jpg';    
-            // Set a placeholder image from the static folder
+            image.src = posterUrl !== 'default_poster_url' ? posterUrl : '/static/placeholder.jpg';
         });
     
         var info = document.createElement('div');
         info.className = 'movie-info';
     
-        var title = document.createElement('div');
-        title.className = 'movie-title';
-        title.innerHTML = movie.title;
+        var titleLink = document.createElement('a');
+        titleLink.href = `https://www.google.com/search?q=${encodeURIComponent(movie.title)}`; // Google search link
+        titleLink.target = '_blank'; // Open in a new tab
+        titleLink.className = 'movie-title-link';
+        titleLink.innerHTML = movie.title;
     
         var rating = document.createElement('div');
         rating.className = 'movie-rating';
@@ -55,20 +55,15 @@ document.addEventListener('DOMContentLoaded', function() {
         details.className = 'movie-details';
         details.innerHTML = movie.details;
     
-        info.appendChild(title);
+        info.appendChild(titleLink);
         info.appendChild(rating);
         info.appendChild(details);
-    
-        card.appendChild(image); // Append image here
+        card.appendChild(image);
         card.appendChild(info);
-    
-        card.addEventListener('click', function() {
-            var detailsVisible = details.style.display === 'block';
-            details.style.display = detailsVisible ? 'none' : 'block';
-        });
     
         return card;
     }
+    
 
     function createSimpleMovieCard(movie) {
         var card = document.createElement('div');

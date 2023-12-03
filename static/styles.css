@@ -85,6 +85,14 @@ body {
     font-size: 18px;
     color: #000000;
 }
+.movie-title-link {
+    color: black; /* or whatever color the text normally is */
+    text-decoration: none; /* removes the underline */
+}
+
+.movie-title-link:hover {
+    text-decoration: underline; /* adds underline on hover, if desired */
+}
 
 .movie-rating {
     color: #f1c40f;
