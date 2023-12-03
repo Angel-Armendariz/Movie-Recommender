@@ -64,7 +64,9 @@ def recommend_movies(input_title):
         "genre": ", ".join(movies.iloc[movie_idx]['Genre'])
     }
 
-    distances, indices = model.kneighbors([genres_df.iloc[movie_idx]])
+    # Ensure the input for the model has the same feature names as during fitting
+    input_features = genres_df.iloc[[movie_idx]]  # Make it a dataframe with the same structure
+    distances, indices = model.kneighbors(input_features)
     recommended_movie_indices = indices[0][1:]  # Exclude the input movie itself
 
     recommended_movies = []
