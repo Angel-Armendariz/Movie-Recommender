@@ -9,8 +9,8 @@ import random
 app = Flask(__name__)
 
 # Loading datasets
-movies = pd.read_csv('./movies.csv')
-ratings = pd.read_csv('./ratings.csv')
+movies = pd.read_csv('./data/movies.csv')
+ratings = pd.read_csv('./data/ratings.csv')
 
 @app.route('/')
 def index():
